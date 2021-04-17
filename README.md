@@ -13,4 +13,4 @@ Alexa2ESP is poorly hacked version of Xose Pérez's Fauxmo library. The hacks el
   2 Advanced example.
   
 ## Notes
-(Now, to just get teh rest up here too...)
+(Now, to just get the code up here too...)
