@@ -11,6 +11,7 @@ A user provided processing routine (callback method) establishes common command 
 
 ## Examples
   1 Minimalist example - simple callback method.
+  
   2 Advanced example - extended FIFO command processing method.
   
 ## Notes
