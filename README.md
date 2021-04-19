@@ -13,14 +13,15 @@ A user provided processing routine (callback method) establishes common command 
   1. Minimalist example - simple callback method
      - [PlatformIO w/ Arduino framework for both ESP32s and ESP8266 nodemcu
      - Alexa2Esp enabling 2 virtual devices, both w/ 101 possible voice commands
+     - Callback method for command processing
      - Async Web Server
 
-  2. Advanced example - extended FIFO command processing method
+  2. Advanced example - FIFO command queue and processing method
      - PlatformIO w/ Arduino framework for both ESP32s and ESP8266 nodemcu
      - Alexa2Esp enabling 2 virtual devices, both w/ 101 possible voice commands
+     - FIFO pending queue and command processing
      - Async Web Server
      - Websockets and Web Monitor with Input Field for commands
-     - FIFO pending queue and command processing
      - File system with send-file, upload, download, delete and clear
      - OTA for both sketch and data
      - Local Time and Date management
