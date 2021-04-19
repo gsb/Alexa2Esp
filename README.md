@@ -10,7 +10,6 @@ Alexa2ESP is poorly hacked version of Xose Pérez's Fauxmo library. The hacks el
 A user provided processing routine (callback method) establishes common command processing using "if-else" or "switch-case" like statements to evaluate the command within the ESP's current state and actions to perform.
 
 ## Examples
-  [B]1. Minimalist example[/B] - simple callback method.
-  
+  1. Minimalist example - simple callback method.
   2. Advanced example - extended FIFO command processing method.
   
