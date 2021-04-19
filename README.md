@@ -10,12 +10,12 @@ Alexa2ESP is poorly hacked version of Xose Pérez's Fauxmo library. The hacks el
 A user provided processing routine (callback method) establishes common command processing using "if-else" or "switch-case" like statements to evaluate the command within the ESP's current state and actions to perform.
 
 ## Examples
-  1. Minimalist example - simple callback method.
-     - [PlatformIO w/ Arduino framework for both ESP32s and ESP8266 nodemcu.
-     - Alexa2Esp enabling 2 virtual devices, both w/ 101 possible voice commands.
+  1. Minimalist example - simple callback method
+     - [PlatformIO w/ Arduino framework for both ESP32s and ESP8266 nodemcu
+     - Alexa2Esp enabling 2 virtual devices, both w/ 101 possible voice commands
      - Async Web Server
 
-  2. Advanced example - extended FIFO command processing method.
+  2. Advanced example - extended FIFO command processing method
      - PlatformIO w/ Arduino framework for both ESP32s and ESP8266 nodemcu
      - Alexa2Esp enabling 2 virtual devices, both w/ 101 possible voice commands
      - Async Web Server
@@ -23,6 +23,6 @@ A user provided processing routine (callback method) establishes common command 
      - FIFO pending queue and command processing
      - File system with send-file, upload, download, delete and clear
      - OTA for both sketch and data
-     - (Local) Time and Date management
+     - Local Time and Date management
      - Timers for interval and one-up function calls
      - TP-Link Switch controls
