@@ -1,0 +1,11 @@
+#######################################
+# Syntax Coloring Map For Alexa2esp
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Alexa2esp	KEYWORD1
+Alexa2espDevice	KEYWORD1
+Alexa2espDeviceType	KEYWORD1

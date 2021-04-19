@@ -1,0 +1,15 @@
+{
+  "name": "Alexa2Esp",
+  "version": "0.1.2",
+  "frameworks": "Arduino",
+  "keywords": "alexa, esp32, esp8266, control, echo, dot, async",
+  "description": "Library to control an ESP32 or ESP8266 module with the Alexa voice assistant.",
+  "url": "https://github.com/gsb/Alexa2Esp",
+  "authors":[{
+    "name": "gsb"
+  }],
+  "repository":{
+    "type": "git",
+    "url": "https://github.com/gsb/Alexa2esp"
+  }
+}
