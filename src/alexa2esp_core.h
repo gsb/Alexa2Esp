@@ -6,7 +6,10 @@
 // Alexa voice commands for ESP32 and esp8266
 
 /*-------------------------------------------------------------------------------
-ALEXA2ESP ESP
+
+Alexa2Esp (C) 2016-2020 by gsb <gregBaker dot email at gmail dot com>
+
+Fauxmo ESP
 Copyright (C) 2016-2020 by Xose Pérez <xose dot perez at gmail dot com>
 The MIT License (MIT)
 
@@ -36,10 +39,13 @@ THE SOFTWARE.
 #define ALEXA2ESP_UDP_MULTICAST_IP     IPAddress(239,255,255,250)
 #define ALEXA2ESP_UDP_MULTICAST_PORT   1900
 #define ALEXA2ESP_TCP_MAX_CLIENTS      10
-#define ALEXA2ESP_TCP_PORT             80
+//#define ALEXA2ESP_TCP_PORT             80
 #define ALEXA2ESP_RX_TIMEOUT           3
 #define ALEXA2ESP_DEVICE_UNIQUE_ID_LENGTH  12
 
+#ifndef SERVER_PORT
+  #define SERVER_PORT 80
+#endif
 
 #ifdef ARDUINO_ARCH_ESP32
   #include <WiFi.h>
@@ -50,13 +56,13 @@ THE SOFTWARE.
 #endif
 #include <ESPAsyncWebServer.h>
 #include <WiFiUdp.h> //...not async.
-#include <vector>
 #include <queue>
+#include <vector>
 
 
 //-- Globals, Prototypes and such...
-extern std::queue<String> pending;
-AsyncWebServer server(80); // Async server interface
+std::queue<String> pending;
+AsyncWebServer server(SERVER_PORT); // Async server interface
 String espName; // The ESP Name based it's IP address (hopefully fixed.)
 
 
@@ -186,7 +192,7 @@ class Alexa2Esp {
 
   private:
     AsyncServer * _server;
-    unsigned int _tcp_port = ALEXA2ESP_TCP_PORT;
+    unsigned int _tcp_port = SERVER_PORT;
     std::vector<alexa2espesp_device_t> _devices;
     #ifdef ESP8266
       WiFiEventHandler _handler;
