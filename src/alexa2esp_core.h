@@ -7,9 +7,6 @@
 
 /*-------------------------------------------------------------------------------
 ALEXA2ESP ESP
-Copyright (C) 2021 by gsb <gregBaker dot email at gmail dot com>
-
-Fauxmo ESP
 Copyright (C) 2016-2020 by Xose Pérez <xose dot perez at gmail dot com>
 The MIT License (MIT)
 
