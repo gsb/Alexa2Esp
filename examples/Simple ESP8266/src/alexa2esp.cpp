@@ -1,5 +1,5 @@
 
-#define VERSION "Alexa2Esp Starter  21/04/17P  0.1.2"
+#define VERSION "Alexa2Esp Starter  21/04/18P  0.1.2"
 
 
 //-- Version Includes -----------------------------------------------------------

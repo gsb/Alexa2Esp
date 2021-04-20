@@ -22,12 +22,14 @@
 #include <time.h>
 #include <arduino-timer.h>
 
-//...included in core.h, here for reference.
-//#include <vector>
-//#include <queue>
-//#include <MD5Builder.h>
-//#include <ESPAsyncWebServer.h>
-//#include <WiFiUdp.h> //...not async.
+#ifndef CORE_SUPPORT_H
+  #include <vector>
+  #include <queue>
+  #include <ESPAsyncWebServer.h>
+  std::queue<String> pending; // Command pending queue, FIFO, for better time sequencing.
+  AsyncWebServer server(SERVER_PORT); // Async server interface
+  String espName; // The ESP Name based it's IP address (hopefully fixed.)
+#endif
 
 #include <ArduinoOTA.h>
 
@@ -92,14 +94,6 @@
   Debug DBG;
   #undef debug
   #define debug DBG
-#endif
-
-
-//-- Globals, Prototypes and such...
-#ifndef CORE_SUPPORT_H
-  std::queue<String> pending; // Command pending queue, FIFO, for better time sequencing.
-  AsyncWebServer server(SERVER_PORT); // Async server interface
-  String espName; // The ESP Name based it's IP address (hopefully fixed.)
 #endif
 
 

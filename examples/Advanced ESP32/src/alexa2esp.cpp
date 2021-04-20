@@ -1,9 +1,5 @@
 
-#ifdef ARDUINO_ARCH_ESP32
-  #define VERSION "Alexa2Esp32  21/04/16P  0.1.0"
-#else
-  #define VERSION "Alexa2Esp8266  21/04/16P  0.1.0"
-#endif
+#define VERSION "Alexa2Esp32  21/04/18P  0.1.2"
 
 //-- Version Includes -----------------------------------------------------------
 //    - PlatformIO w/ Arduino framework for both ESP32s and ESP8266 nodemcu 
@@ -12,7 +8,7 @@
 //    - FIFO pending queue and command processing
 //    - File system with send-file, upload, download, delete and clear
 //    - OTA for both sketch and data
-//    - (Local) Time and Date management
+//    - Local Time and Date management
 //    - Timers for interval and one-up function calls
 //    - TP-Link Switch controls
 //-------------------------------------------------------------------------------
@@ -34,50 +30,50 @@ extern bool processPending(void); // (below)
 //-------------------------------------------------------------------------------
 
 void setup() {
-    serialSetup();
-    wifiSetup();
-    serverSetup();
-    otaSetup();
-    alexa2esp.initialize();
+  serialSetup();
+  wifiSetup();
+  serverSetup();
+  otaSetup();
+  alexa2esp.initialize();
 
-    // Add virtual devices
-    alexa2esp.addDevice(espName.c_str(), 75);
+  // Add virtual devices here.
+  alexa2esp.addDevice(espName.c_str(), 75);
 
-    // LED_BUILTIN
-    pinMode(LED_BUILTIN, OUTPUT);
-    digitalWrite(LED_BUILTIN, HIGH); // Our LED_BUILTIN has inverse logic (high for OFF, low for ON)
+  // LED_BUILTIN
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH); // Our LED_BUILTIN has inverse logic (high for OFF, low for ON)
 
   //== SETUP TIMERS ==========================
-    // POL "proof-of-life" Timer
-    pinMode(LED_BUILTIN, OUTPUT); // POL Blinker...
-    timer.every(500, [&](void*) -> bool {
-      digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
-      return true; // repeat? true
-    });
-    timer.every(10000, [&](void*) -> bool {
-      char buff[64];
-      snprintf(buff, sizeof(buff),
-        "init: %lu  curr: %u  delta: %d\n",
-          init_heap_size,
-          ESP.getFreeHeap(),
-          (int)(ESP.getFreeHeap()-init_heap_size)
-      );
-      #ifdef ARDUINO_ARCH_ESP32
-        tmstruct.tm_year = 0;
-        getLocalTime(&tmstruct, 5000);
-        debug.printf("heap: %02d:%02d:%02d  ",tmstruct.tm_hour , tmstruct.tm_min, tmstruct.tm_sec);
-      #else
-        debug.printf("heap: %s  ",timeClient.getFormattedTime().c_str());
-      #endif
-      debug.printf("%s", buff);
-      return true; // repeat? true
-    });
+  // POL "proof-of-life" Timer
+  pinMode(LED_BUILTIN, OUTPUT); // POL Blinker...
+  timer.every(500, [&](void*) -> bool {
+    digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+    return true; // repeat? true
+  });
+  timer.every(10000, [&](void*) -> bool {
+    char buff[64];
+    snprintf(buff, sizeof(buff),
+      "init: %lu  curr: %u  delta: %d\n",
+        init_heap_size,
+        ESP.getFreeHeap(),
+        (int)(ESP.getFreeHeap()-init_heap_size)
+    );
+    #ifdef ARDUINO_ARCH_ESP32
+      tmstruct.tm_year = 0;
+      getLocalTime(&tmstruct, 5000);
+      debug.printf("heap: %02d:%02d:%02d  ",tmstruct.tm_hour , tmstruct.tm_min, tmstruct.tm_sec);
+    #else
+      debug.printf("heap: %s  ",timeClient.getFormattedTime().c_str());
+    #endif
+    debug.printf("%s", buff);
+    return true; // repeat? true
+  });
   //==========================================
 
-    delay(1000);
-    debug.printf("Setup complete.\n");
-    Serial.flush();
-    init_heap_size = ESP.getFreeHeap();
+  delay(1000);
+  debug.printf("Setup complete.\n");
+  Serial.flush();
+  init_heap_size = ESP.getFreeHeap();
 }
 
 void loop() {
@@ -119,6 +115,8 @@ bool processPending() { //...sequentially execute string actions.
   //...get first in queue - FIFO queue.
   String msg = pending.front();
   pending.pop();
+
+debug.printf("processing:  %s\n", msg.c_str());
 
   // Parse the command message into slash seperated tokens.
   std::vector<String> tokens;

@@ -1,9 +1,5 @@
 
-#ifdef ARDUINO_ARCH_ESP32
-  #define VERSION "Alexa2Esp32  21/04/16P  0.1.0"
-#else
-  #define VERSION "Alexa2Esp8266  21/04/16P  0.1.0"
-#endif
+#define VERSION "Alexa2Esp32  21/04/18P  0.1.2"
 
 //-- Version Includes -----------------------------------------------------------
 //    - PlatformIO w/ Arduino framework for both ESP32s and ESP8266 nodemcu 
