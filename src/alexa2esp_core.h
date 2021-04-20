@@ -6,8 +6,8 @@
 // Alexa voice commands for ESP32 and esp8266
 
 /*-------------------------------------------------------------------------------
-
-Alexa2Esp (C) 2016-2020 by gsb <gregBaker dot email at gmail dot com>
+ALEXA2ESP ESP
+Copyright (C) 2021 by gsb <gregBaker dot email at gmail dot com>
 
 Fauxmo ESP
 Copyright (C) 2016-2020 by Xose Pérez <xose dot perez at gmail dot com>
@@ -335,8 +335,7 @@ bool Alexa2Esp::_onTCPControl(AsyncClient *client, String url, String body) {
       uint8_t bri = body.substring(body.indexOf("bri") +5).toInt();
       setValue(&_devices[id], bri==1?0:bri); // really should be zero
       if (_setCallback != nullptr) _setCallback(&_devices[id]);
-      else // Alternative: 
-        pending.push(String(_devices[id].name) + F("/") + String(_devices[id].percent));
+      else pending.push(String(_devices[id].name) + F("/") + String(_devices[id].percent));
     }
 		uint8_t rv =  max(0,_devices[id].value-1); // Build response to Alexa.
     char response[strlen_P(ALEXA2ESP_TCP_STATE_RESPONSE)+10];
@@ -434,13 +433,15 @@ unsigned char Alexa2Esp::addDevice(const char * device_name, uint8_t pcnt) {
   // init properties
   device.name = strdup(device_name);
   device.state = (!pcnt?false:true);
-  setPercent(&device, pcnt); // <-- initial percent w/ implicit vlue
 
   // create uniqueid
   String mac = WiFi.macAddress();
   snprintf(device.uniqueid, 27, "%s:%s-%02X", mac.c_str(), "00:00", device_id);
   _devices.push_back(device); // Attach
+  setPercent(&device, pcnt); // <-- initial percent w/ implicit vlue
   if (_setCallback != nullptr) _setCallback(&device);
+  else // Alternative: 
+    pending.push(String(device.name) + F("/") + String(device.percent));
   return device_id;
 }
 
