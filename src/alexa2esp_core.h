@@ -425,9 +425,9 @@ void Alexa2Esp::setDeviceUniqueId(unsigned char id, const char *uniqueid) {
 unsigned char Alexa2Esp::addDevice(const char * device_name, uint8_t pcnt) {
   alexa2espesp_device_t device;
   unsigned int device_id = _devices.size();
-  serial.printf("Init percent 1:  %d\n", pcnt);
+  Serial.printf("Init percent 1:  %d\n", pcnt);
   if (pcnt>100) pcnt = 100;
-  serial.printf("Init percent 2:  %d\n", pcnt);
+  Serial.printf("Init percent 2:  %d\n", pcnt);
 
   // init properties
   device.name = strdup(device_name);
