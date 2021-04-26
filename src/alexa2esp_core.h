@@ -438,8 +438,6 @@ unsigned char Alexa2Esp::addDevice(const char * device_name, uint8_t pcnt) {
   snprintf(device.uniqueid, 27, "%s:%s-%02X", mac.c_str(), "00:00", device_id);
   _devices.push_back(device); // Attach
   setPercent(&device, pcnt); // <-- initial percent w/ implicit vlue
-  delay(10);
-  yield();
   if (_setCallback != nullptr) _setCallback(&device);
   else // Alternative: 
     pending.push(String(device.name) + F("/") + String(device.percent));
