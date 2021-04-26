@@ -1,5 +1,4 @@
 
-
 #ifndef CORE_SUPPORT_H
 #define CORE_SUPPORT_H
 
@@ -439,6 +438,9 @@ unsigned char Alexa2Esp::addDevice(const char * device_name, uint8_t pcnt) {
   snprintf(device.uniqueid, 27, "%s:%s-%02X", mac.c_str(), "00:00", device_id);
   _devices.push_back(device); // Attach
   setPercent(&device, pcnt); // <-- initial percent w/ implicit vlue
+
+_handleUDP();
+
   if (_setCallback != nullptr) _setCallback(&device);
   else // Alternative: 
     pending.push(String(device.name) + F("/") + String(device.percent));
@@ -484,7 +486,6 @@ void Alexa2Esp::initialize() { // Enable device and start UDP
   #else
     _udp.beginMulticast(WiFi.localIP(), ALEXA2ESP_UDP_MULTICAST_IP, ALEXA2ESP_UDP_MULTICAST_PORT);
   #endif
-  delay(500);
 }
 
 Alexa2Esp alexa2esp;
