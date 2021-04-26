@@ -1,4 +1,5 @@
 
+
 #ifndef CORE_SUPPORT_H
 #define CORE_SUPPORT_H
 
@@ -425,9 +426,9 @@ void Alexa2Esp::setDeviceUniqueId(unsigned char id, const char *uniqueid) {
 unsigned char Alexa2Esp::addDevice(const char * device_name, uint8_t pcnt) {
   alexa2espesp_device_t device;
   unsigned int device_id = _devices.size();
-  Serial.printf("Init percent 1:  %d\n", pcnt);
+  //Serial.printf("Init percent 1:  %d\n", pcnt);
   if (pcnt>100) pcnt = 100;
-  Serial.printf("Init percent 2:  %d\n", pcnt);
+  //Serial.printf("Init percent 2:  %d\n", pcnt);
 
   // init properties
   device.name = strdup(device_name);
@@ -483,6 +484,7 @@ void Alexa2Esp::initialize() { // Enable device and start UDP
   #else
     _udp.beginMulticast(WiFi.localIP(), ALEXA2ESP_UDP_MULTICAST_IP, ALEXA2ESP_UDP_MULTICAST_PORT);
   #endif
+  delay(500);
 }
 
 Alexa2Esp alexa2esp;
