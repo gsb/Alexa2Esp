@@ -6,8 +6,11 @@
 // Alexa voice commands for ESP32 and esp8266
 
 /*-------------------------------------------------------------------------------
-ALEXA2ESP ESP
-Copyright (C) 2016-2020 by Xose Pérez <xose dot perez at gmail dot com>
+MIT License
+
+Alexa2ESP Copyright (c) 2021 gsb
+
+Fauxmo Copyright (C) 2016-2020 by Xose Pérez <xose dot perez at gmail dot com>
 The MIT License (MIT)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -61,6 +64,7 @@ THE SOFTWARE.
 std::queue<String> pending;
 AsyncWebServer server(SERVER_PORT); // Async server interface
 String espName; // The ESP Name based it's IP address (hopefully fixed.)
+char* default_device_name;
 
 
 //=== start Alexa2Esp (fauxmo) ==================================================
@@ -161,7 +165,7 @@ class Alexa2Esp {
 
     ~Alexa2Esp();
 
-    unsigned char addDevice(const char * device_name, uint8_t pcnt);
+    alexa2espesp_device_t* addDevice(const char * device_name, uint8_t pcnt);
     void setDeviceUniqueId(unsigned char id, const char *uniqueid);
     char * getDeviceName(unsigned char id, char * buffer, size_t len);
     int getDeviceId(const char * device_name);
@@ -422,14 +426,14 @@ void Alexa2Esp::setDeviceUniqueId(unsigned char id, const char *uniqueid) {
   strncpy(_devices[id].uniqueid, uniqueid, ALEXA2ESP_DEVICE_UNIQUE_ID_LENGTH);
 }
 
-unsigned char Alexa2Esp::addDevice(const char * device_name, uint8_t pcnt) {
+alexa2espesp_device_t* Alexa2Esp::addDevice(const char * device_name, uint8_t pcnt) {
   alexa2espesp_device_t device;
   unsigned int device_id = _devices.size();
-  //Serial.printf("Init percent 1:  %d\n", pcnt);
   if (pcnt>100) pcnt = 100;
-  //Serial.printf("Init percent 2:  %d\n", pcnt);
 
-  // init properties
+  // If global, 'default_device_name' not already defined, save name of first.
+  if (!(_devices.size())) default_device_name = strdup(device_name);
+
   device.name = strdup(device_name);
   device.state = (!pcnt?false:true);
 
@@ -438,10 +442,8 @@ unsigned char Alexa2Esp::addDevice(const char * device_name, uint8_t pcnt) {
   snprintf(device.uniqueid, 27, "%s:%s-%02X", mac.c_str(), "00:00", device_id);
   _devices.push_back(device); // Attach
   setPercent(&device, pcnt); // <-- initial percent w/ implicit vlue
-  if (_setCallback != nullptr) _setCallback(&device);
-  else // Alternative: 
-    pending.push(String(device.name) + F("/") + String(device.percent));
-  return device_id;
+  pending.push(String(device.name) + F("/") + String(device.percent));
+  return &_devices[device_id];
 }
 
 device_t Alexa2Esp::getDeviceByName(const char * device_name) {
@@ -477,7 +479,6 @@ bool Alexa2Esp::process(AsyncClient *client, bool isGet, String url, String body
 void Alexa2Esp::handle() {_handleUDP();}
 
 void Alexa2Esp::initialize() { // Enable device and start UDP
-  ///_enabled = true;
   #ifdef ESP32
     _udp.beginMulticast(ALEXA2ESP_UDP_MULTICAST_IP, ALEXA2ESP_UDP_MULTICAST_PORT);
   #else
@@ -490,49 +491,25 @@ Alexa2Esp alexa2esp;
 //=== end alexa2esp ================================================================
 
 
-//== Optional addin for TP-Link Switches ===========================================
-/*  TP-Link - IP Direct Plug Support - OPTIONAL
- *
- *  Updated: 20/01/15
- *
- *  Credits and information here:
- *    https://www.reddit.com/r/tasker/comments/52lvhq/how_to_control_a_tplink_hs100
- *    https://pastebin.com/PtXtKKPW
- *
- *   ON: \x00\x00\x00*\xd0\xf2\x81\xf8\x8b\xff\x9a\xf7\xd5\xef\x94\xb6\xc5\xa0\xd4\x8b\xf9\x9c\xf0\x91\xe8\xb7\xc4\xb0\xd1\xa5\xc0\xe2\xd8\xa3\x81\xf2\x86\xe7\x93\xf6\xd4\xee\xdf\xa2\xdf\xa2
- *  OFF: \x00\x00\x00*\xd0\xf2\x81\xf8\x8b\xff\x9a\xf7\xd5\xef\x94\xb6\xc5\xa0\xd4\x8b\xf9\x9c\xf0\x91\xe8\xb7\xc4\xb0\xd1\xa5\xc0\xe2\xd8\xa3\x81\xf2\x86\xe7\x93\xf6\xd4\xee\xde\xa3\xde\xa3
- *
- *  Tested with TP-Link's HS100, HS103 and HS105. Should
- *  also work with other TP-Link Smart Plugs like HS110.
- *
- *  User List of currently in-use TP-Link Switchs.
- *    switch_t dog_lights = {"HS105","dog lights","192.168.2.141","68:FF:7B:BA:A7:29"};
- *    switch_t night_lights = {"HS100","night lights","192.168.2.109","70:4F:57:75:A2:86"};
- */
-
-//-- Encoded string packet for TP-Link HS100 on/off states.
-const char  on_packet[46] = {0x00,0x00,0x00,0x2a,0xd0,0xf2,0x81,0xf8,0x8b,0xff,0x9a,0xf7,0xd5,0xef,0x94,0xb6,0xc5,0xa0,0xd4,0x8b,0xf9,0x9c,0xf0,0x91,0xe8,0xb7,0xc4,0xb0,0xd1,0xa5,0xc0,0xe2,0xd8,0xa3,0x81,0xf2,0x86,0xe7,0x93,0xf6,0xd4,0xee,0xdf,0xa2,0xdf,0xa2};
-const char off_packet[46] = {0x00,0x00,0x00,0x2a,0xd0,0xf2,0x81,0xf8,0x8b,0xff,0x9a,0xf7,0xd5,0xef,0x94,0xb6,0xc5,0xa0,0xd4,0x8b,0xf9,0x9c,0xf0,0x91,0xe8,0xb7,0xc4,0xb0,0xd1,0xa5,0xc0,0xe2,0xd8,0xa3,0x81,0xf2,0x86,0xe7,0x93,0xf6,0xd4,0xee,0xde,0xa3,0xde,0xa3};
-
-//-- User Defined TP-Link Switch Structure
-typedef struct {
-  char * type;
-  char * name;
-  char * ip;
-  char * mac;
-} switch_t;
-
-// Set switch mode 'on' or 'off'
-void setPlugState(char * ip, bool mode) {  // Change to Switch by name.
-  AsyncClient* aClient = new AsyncClient();
-  if (aClient->connect(ip, 9999)) {
-    aClient->onConnect([&,aClient,mode] (void * arg, AsyncClient* client) {
-      if (mode) client->write(on_packet, 46);
-      else client->write(off_packet, 46);
-      delete client;
-    });
+//-- Global String to String Tokens Vector. Non-destructive.
+void str2tokens(String data, std::vector<String> &tokens, const char delim = '/', size_t max = 0) {
+  size_t i=0;
+  while(i<=data.length() && data.charAt(i)==delim) { ++i; } //...strip leading /'s
+  for (size_t n=i; i <= data.length(); ++i) {
+    if ((data.charAt(i) == delim) || (i == (data.length()))) {
+      tokens.push_back(data.substring(n,i));
+      if (max && tokens.size() == max-1) {
+        tokens.push_back(data.substring(i+1)); //...remaining as last.
+        return;
+      }
+      n = i+1;
+    }
   }
+  // USAGE:
+  // std::vector<String> tokens;      // tokens list object.
+  // str2tokens(msg, tokens, '/', 3); // 0,1,2 where tokens[2] is remaining.
 }
 
 //==================================================================================
+
 #endif
