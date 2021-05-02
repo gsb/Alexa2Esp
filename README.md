@@ -21,7 +21,8 @@ A user provided processing routine (FIFO loopback queueing method) establishes c
      - Alexa2Esp enables a virtual device with ninty-nine possible voice commands
      - Loopback (FIFO queue) method for command processing
      - Async Web Server
-     **Options to exclude following features, default, included.
+
+     **Options provided to exclude following features. Default is include.**
      - Websockets and Web Monitor with Input Field for commands
      - File system with send-file, upload, download, delete and clear
      - OTA for both sketch and data
