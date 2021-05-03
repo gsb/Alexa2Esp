@@ -10,13 +10,13 @@ Alexa2Esp is poorly hacked version of Xose Pérez's Fauxmo library, IMHO. The ha
 A user provided processing routine (FIFO loopback queueing method) establishes common command processing using "if-else" and/or "switch-case" like statements to validate and process the command within the ESP's current state.
 
 ## Examples
-  1. Minimalist example - simple callback method
+  1. Simple example
      - [PlatformIO w/ Arduino framework for both ESP32s and ESP8266 nodemcu
      - Alexa2Esp enabling a virtual device with ninty-nine possible voice commands
      - Loopback (FIFO queue) method for command processing
      - Async Web Server
 
-  2. Advanced example - FIFO command queue and processing method
+  2. Advanced example
      - PlatformIO w/ Arduino framework for both ESP32s and ESP8266 nodemcu
      - Alexa2Esp enables a virtual device with ninty-nine possible voice commands
      - Loopback (FIFO queue) method for command processing
