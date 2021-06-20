@@ -63,7 +63,6 @@ THE SOFTWARE.
 //-- Globals, Prototypes and such...
 std::queue<String> pending;
 AsyncWebServer server(SERVER_PORT); // Async server interface
-String espName; // The ESP Name based it's IP address (hopefully fixed.)
 char* default_device_name;
 
 
